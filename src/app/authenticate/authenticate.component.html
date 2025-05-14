@@ -1,7 +1,6 @@
-
-<!-- <div class="container d-flex justify-content-center align-items-center vh-100">
+<div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="card shadow p-3" style="width: 400px;">
-        <!-- FORM VIEW 
+        <!-- FORM VIEW -->
         <div *ngIf="page === 1">
             <div class="text-center mb-4">
                 <img src="ids.jpg" alt="" style="width: 100%;">
@@ -10,31 +9,53 @@
             <p class="text-muted text-center small">Please enter your details for Verification</p>
 
             <form [formGroup]="idForm">
-                <div class="row mb-3">
+                <div class="row mb-4">
                     <div class="col-6">
                         <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix" />
+                        <p class="text-danger"
+                            *ngIf="suffixValidation?.errors?.['required'] && suffixValidation?.invalid && (suffixValidation?.touched || suffixValidation?.dirty)">
+                            {{ 'Siffix is required' }}</p>
                     </div>
                     <div class="col-6">
                         <input type="text" class="form-control" formControlName="firstName" placeholder="First Name" />
+                        <p class="text-danger"
+                            *ngIf="firstNameValidation?.errors?.['required'] && firstNameValidation?.invalid && (firstNameValidation?.touched || firstNameValidation?.dirty)">
+                            {{ 'First name is required' }}</p>
                     </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-4">
                     <div class="col-6"> <input type="text" class="form-control" formControlName="middleName"
-                            placeholder="Middle Name" /></div>
+                            placeholder="Middle Name" />
+                        <p class="text-danger"
+                            *ngIf="middletNameValidation?.errors?.['required'] && middletNameValidation?.invalid && (middletNameValidation?.touched || middletNameValidation?.dirty)">
+                            {{ 'Middle name is required' }}</p>
+                    </div>
                     <div class="col-6"> <input type="text" class="form-control" formControlName="lastName"
-                            placeholder="Last Name" /></div>
+                            placeholder="Last Name" />
+                        <p class="text-danger"
+                            *ngIf="lastNameValidation?.errors?.['required'] && lastNameValidation?.invalid && (lastNameValidation?.touched || lastNameValidation?.dirty)">
+                            {{ 'Last name is required' }}</p>
+                    </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-4">
                     <div class="col-6"> <input type="date" class="form-control" formControlName="dob"
-                            placeholder="Date of Birth (YYYY-MM-DD)" /></div>
+                            placeholder="Date of Birth (YYYY-MM-DD)" />
+                        <p class="text-danger"
+                            *ngIf="dobValidation?.errors?.['required'] && dobValidation?.invalid && (dobValidation?.touched || dobValidation?.dirty)">
+                            {{ 'Date of birth is required' }}</p>
+                    </div>
                     <div class="col-6"> <input type="number" class="form-control" formControlName="pcn"
-                            placeholder="PCN Number" /></div>
+                            placeholder="PCN Number" />
+                        <p class="text-danger"
+                            *ngIf="pcnValidation?.errors?.['required'] && pcnValidation?.invalid && (pcnValidation?.touched || pcnValidation?.dirty)">
+                            {{ 'PCN is required' }}</p>
+                    </div>
                 </div>
-                <button class="btn btn-primary w-100" type="submit" (click)="nextPage()">Continue</button>
+                <button class="btn btn-primary w-100" type="submit" (click)="nextPage()" [disabled]="idForm.invalid">Continue</button>
             </form>
         </div>
 
-        <!-- NEXT PAGE VIEW 
+        <!-- NEXT PAGE VIEW -->
         <div *ngIf="page === 2" class="text-center">
             <h4>Take Live Selfie</h4>
             <p class="text-muted">Make sure you are the person verifying.</p>
@@ -79,13 +100,10 @@
                         <button class="btn btn-warning" (click)="retakeImage()">Retake</button>
                         <button class="btn btn-success" (click)="onVerificationSuccess()">Submit</button>
                     </div>
-                    <button class="btn btn-secondary mt-3" *ngIf="!capturedImage" (click)="reset()">Retry</button>
+                    <button class="btn btn-secondary mt-3" *ngIf="!capturedImage" (click)="retry()">Retry</button>
 
                 </div>
             </div>
         </div>
     </div>
-</div> -->
-
-
-<router-outlet></router-outlet>
+</div>
