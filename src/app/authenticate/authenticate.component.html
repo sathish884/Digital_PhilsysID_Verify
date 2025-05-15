@@ -122,13 +122,18 @@
         <div class="modal-content">
             <div class="modal-body p-4">
                 <div class="row">
+                    <h5 class="text-center mb-4">ID-Authentication</h5>
                     <div class="col-md-4 text-center">
-                        <img [src]="userPhoto" class="img-fluid rounded" alt="User Photo"
-                            style="width: 150px; height: 30%;">
+                        <h6 style="font-weight: 650;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-size: 18px;
+    color: #080808">Face</h6>
+                        <img [src]="userPhoto ? userPhoto : 'blank-profile.webp'" class="img-fluid rounded"
+                            alt="User Photo" style="width: 90%; height: 40%;">
                     </div>
                     <div class="col-md-8">
-                        <h5 class="text-center mb-4">ID-Authentication</h5>
-                        <table class="table table-borderless table-sm">
+                        <table class="table table-borderless table-md">
                             <tbody>
                                 <tr>
                                     <th>PhilSys Card Number (PCN)</th>
@@ -164,11 +169,11 @@
                                 </tr>
                                 <tr>
                                     <th>Address</th>
-                                    <td>{{userData.firstName_eng || "-"}}</td>
+                                    <td>{{userData.presentAddress_eng || "-"}}</td>
                                 </tr>
                                 <tr>
                                     <th>Marital Status</th>
-                                    <td>{{userData.presentAddress_eng || "-"}}</td>
+                                    <td>{{userData.maritalStatus_eng || "-"}}</td>
                                 </tr>
                                 <tr>
                                     <th>Email Address</th>
@@ -187,7 +192,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-3">
-                    <button class="btn btn-primary" data-bs-dismiss="modal" (click)="closeModal()">OK</button>
+                    <button class="btn btn-primary w-25" data-bs-dismiss="modal" (click)="closeModal()">OK</button>
                 </div>
             </div>
         </div>

@@ -21,7 +21,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
   @ViewChild('video') videoRef!: ElementRef;
   @ViewChild('canvas') canvasRef!: ElementRef;
 
-  capturedImage: string | null = null;
+  capturedImage: string = "";
   private stream: MediaStream | null = null;
 
   idForm: FormGroup;
@@ -178,24 +178,24 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
 
   captureImage() {
     this.isBlinking = true;
-
-    // Simulate delay to finish blinking, then show captured state
     setTimeout(() => {
-      const canvas = this.canvasRef.nativeElement as HTMLCanvasElement;
-      this.capturedImage = canvas.toDataURL('image/png')
-      this.loading = false;
-      this.stopCamera();
-    }, 1800); // match blink duration
-  }
+      requestAnimationFrame(() => {
+        const canvas = this.canvasRef.nativeElement as HTMLCanvasElement;
+        if (!canvas) throw new Error('Canvas not available');
+        this.capturedImage = canvas.toDataURL('image/png');
+        this.loading = false;
+        this.stopCamera();
+      });
+    }, 1800);
 
+  }
 
   async retakeImage() {
     this.steps.forEach(step => step.completed = false);
     this.calibrated = false;
-    this.capturedImage = null;
+    this.capturedImage = "";
     this.direction = '';
     this.isBlinking = false;
-
     await this.startCamera();
     this.detectPose();
   }
@@ -203,18 +203,22 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
   retry() {
     this.steps.forEach(step => step.completed = false);
     this.calibrated = false;
-    this.capturedImage = null;
+    this.capturedImage = "";
     this.direction = '';
     this.detectPose()
   }
 
   stopCamera(): void {
+    // Then stop the stream
     if (this.stream) {
       this.stream.getTracks().forEach(track => track.stop());
       this.stream = null;
     }
+
     const video = this.videoRef.nativeElement as HTMLVideoElement;
-    video.srcObject = null;
+    if (video) {
+      video.srcObject = null;
+    }
   }
 
   closeModal() {
@@ -227,7 +231,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     this.idForm.reset();
     this.steps.forEach(step => step.completed = false);
     this.calibrated = false;
-    this.capturedImage = null;
+    this.capturedImage = "";
     this.direction = '';
     this.loading = false;
   }
@@ -243,14 +247,21 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
         "pcn": this.idForm.value.pcn,
         "imageString": this.capturedImage
       }
+      Swal.fire({
+        title: 'Loading...', text: 'Please wait while we fatching the data',
+        allowOutsideClick: false,
+        showConfirmButton: false, // Hide the confirm button
+        didOpen: () => {
+          Swal.showLoading(); // Show the loading spinner
+        }
+      });
       this.verifyService.idverify(body).pipe(takeUntil(this.destroy$)).subscribe(
         (resp: any) => {
-          //  console.log(resp);
+          Swal.close();
           const modelelement = document.getElementById('staticBackdrop') as HTMLElement;
-
           if (resp.message === "Verified") {
             this.userData = resp.data;
-            this.userPhoto = `data:image/jpeg;base64,${resp.data.photo}`
+            this.userPhoto = `data:image/jpeg;base64,${resp.data.photo}`;
             const model = new bootstrap.Modal(modelelement);
             model.show();
           } else if (resp.message === "Not Verified") {
@@ -261,14 +272,23 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
               this.idForm.reset();
               this.steps.forEach(step => step.completed = false);
               this.calibrated = false;
-              this.capturedImage = null;
+              this.capturedImage = "";
               this.direction = '';
               this.page = 1;
               this.loading = false;
-            })
+            });
           }
+        },
+        (error) => {
+          Swal.close(); // Also close it in case of error
+          Swal.fire({
+            icon: 'error',
+            title: 'Verification Failed',
+            text: 'Something went wrong during verification.'
+          });
         }
-      )
+      );
+
     }
   }
 
