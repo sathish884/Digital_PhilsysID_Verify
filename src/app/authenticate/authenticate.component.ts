@@ -6,7 +6,9 @@ import { VerifyService } from '../service/verify.service'
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
-import { log } from '@tensorflow/tfjs-core/dist/log';
+
+declare var bootstrap: any;
+
 
 @Component({
   selector: 'app-authenticate',
@@ -32,6 +34,9 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
   baselineNoseX = 0;
   baselineNoseY = 0;
   page = 1;
+  userData: any = {}
+  today: string;
+  userPhoto: string = "";
 
   private destroy$ = new Subject<void>;
 
@@ -43,14 +48,31 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(private fb: FormBuilder, private verifyService: VerifyService, private datePipe: DatePipe) {
+    const now = new Date();
+    this.today = now.toISOString().split('T')[0]; // format: YYYY-MM-DD
     this.idForm = this.fb.group({
       suffix: ['', Validators.required],
       firstName: ['', Validators.required],
       middleName: ['', Validators.required],
       lastName: ['', Validators.required],
       dob: ['', Validators.required],
-      pcn: ['', Validators.required]
+      pcn: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]]
     });
+  }
+
+  // PCN number validation
+  enforceMaxLength(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Remove any non-digit characters
+    input.value = input.value.replace(/\D/g, '');
+
+    // Truncate to 16 digits max
+    if (input.value.length > 16) {
+      input.value = input.value.slice(0, 16);
+    }
+
+    // Update the form control manually since we altered the value
+    this.idForm.get('pcn')?.setValue(input.value);
   }
 
   ngOnInit(): void {
@@ -58,11 +80,11 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     this.model = await posenet.load();
-    //  await this.detectPose();
   }
 
   goBack() {
     this.page--;
+    this.loading = false;
   }
 
   nextPage() {
@@ -71,8 +93,10 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
 
   capture() {
     this.loading = true;
-    this.page++;
-    this.startCamera()
+    setTimeout(() => {
+      this.page++;
+      this.startCamera()
+    }, 2000)
   }
 
   get currentInstruction() {
@@ -143,7 +167,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
           // ✅ Auto-capture once all steps are done
           if (this.allStepsCompleted && !autoCaptured) {
             autoCaptured = true;
-            setTimeout(() => this.captureImage(), 1500); // slight delay to stabilize
+            setTimeout(() => this.captureImage(), 1500);
           }
         }
       }
@@ -158,9 +182,9 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     // Simulate delay to finish blinking, then show captured state
     setTimeout(() => {
       const canvas = this.canvasRef.nativeElement as HTMLCanvasElement;
-      this.stopCamera(); // 👈 stops the video stream
-      this.capturedImage = canvas.toDataURL('image/png')// your actual captured image
-      this.isBlinking = false;
+      this.capturedImage = canvas.toDataURL('image/png')
+      this.loading = false;
+      this.stopCamera();
     }, 1800); // match blink duration
   }
 
@@ -172,8 +196,8 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     this.direction = '';
     this.isBlinking = false;
 
-    await this.startCamera(); // 🔁 Restart the camera stream
-    this.detectPose();        // 🧠 Resume pose detection
+    await this.startCamera();
+    this.detectPose();
   }
 
   retry() {
@@ -193,6 +217,21 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     video.srcObject = null;
   }
 
+  closeModal() {
+    const modalElement = document.getElementById('staticBackdrop') as HTMLElement;
+    modalElement.classList.remove('show');
+    modalElement.style.display = 'none';
+    document.body.classList.remove('modal-open');
+    document.querySelector('.modal-backdrop')?.remove();
+    this.page = 1;
+    this.idForm.reset();
+    this.steps.forEach(step => step.completed = false);
+    this.calibrated = false;
+    this.capturedImage = null;
+    this.direction = '';
+    this.loading = false;
+  }
+
   onVerificationSuccess() {
     if (this.idForm.valid) {
       let body = {
@@ -207,7 +246,14 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
       this.verifyService.idverify(body).pipe(takeUntil(this.destroy$)).subscribe(
         (resp: any) => {
           //  console.log(resp);
-          if (resp.message === "Not Verified") {
+          const modelelement = document.getElementById('staticBackdrop') as HTMLElement;
+
+          if (resp.message === "Verified") {
+            this.userData = resp.data;
+            this.userPhoto = `data:image/jpeg;base64,${resp.data.photo}`
+            const model = new bootstrap.Modal(modelelement);
+            model.show();
+          } else if (resp.message === "Not Verified") {
             Swal.fire({
               icon: 'warning',
               text: 'Not Verified'
@@ -217,13 +263,8 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
               this.calibrated = false;
               this.capturedImage = null;
               this.direction = '';
-            })
-          } else {
-            Swal.fire({
-              icon: 'success',
-              text: 'Verified'
-            }).then(() => {
-              this.page = 1
+              this.page = 1;
+              this.loading = false;
             })
           }
         }
