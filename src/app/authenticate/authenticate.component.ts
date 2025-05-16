@@ -155,8 +155,8 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
 
           if (dx > 30) this.direction = 'Left';
           else if (dx < -30) this.direction = 'Right';
-          else if (dy > 30) this.direction = 'Down';
-          else if (dy < -30) this.direction = 'Up';
+          else if (dy > 40) this.direction = 'Down';
+          else if (dy < -40) this.direction = 'Up';
           else this.direction = 'Center';
 
           const currentStep = this.steps.find(s => !s.completed);
@@ -164,7 +164,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
             currentStep.completed = true;
           }
 
-          // ✅ Auto-capture once all steps are done
+          // Auto-capture once all steps are done
           if (this.allStepsCompleted && !autoCaptured) {
             autoCaptured = true;
             setTimeout(() => this.captureImage(), 1500);
@@ -231,6 +231,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     this.idForm.reset();
     this.steps.forEach(step => step.completed = false);
     this.calibrated = false;
+    this.isBlinking = false;
     this.capturedImage = "";
     this.direction = '';
     this.loading = false;
