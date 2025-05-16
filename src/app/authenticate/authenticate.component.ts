@@ -51,9 +51,9 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     const now = new Date();
     this.today = now.toISOString().split('T')[0]; // format: YYYY-MM-DD
     this.idForm = this.fb.group({
-      suffix: [''],
-      firstName: [''],
-      middleName: [''],
+      suffix: ['',Validators.required],
+      firstName: ['',Validators.required],
+      middleName: ['',Validators.required],
       lastName: ['', Validators.required],
       dob: ['', Validators.required],
       pcn: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]]

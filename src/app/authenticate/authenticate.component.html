@@ -12,13 +12,13 @@
             <form [formGroup]="idForm" class="p-3">
                 <div class="row mb-4">
                     <div class="col-6">
-                        <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix" />
+                        <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix *" />
                         <p class="text-danger"
                             *ngIf="suffixValidation?.errors?.['required'] && suffixValidation?.invalid && (suffixValidation?.touched || suffixValidation?.dirty)">
                             {{ 'Siffix is required' }}</p>
                     </div>
                     <div class="col-6">
-                        <input type="text" class="form-control" formControlName="firstName" placeholder="First Name" />
+                        <input type="text" class="form-control" formControlName="firstName" placeholder="First Name *" />
                         <p class="text-danger"
                             *ngIf="firstNameValidation?.errors?.['required'] && firstNameValidation?.invalid && (firstNameValidation?.touched || firstNameValidation?.dirty)">
                             {{ 'First name is required' }}</p>
@@ -26,13 +26,13 @@
                 </div>
                 <div class="row mb-4">
                     <div class="col-6"> <input type="text" class="form-control" formControlName="middleName"
-                            placeholder="Middle Name" />
+                            placeholder="Middle Name *" />
                         <p class="text-danger"
                             *ngIf="middletNameValidation?.errors?.['required'] && middletNameValidation?.invalid && (middletNameValidation?.touched || middletNameValidation?.dirty)">
                             {{ 'Middle name is required' }}</p>
                     </div>
                     <div class="col-6"> <input type="text" class="form-control" formControlName="lastName"
-                            placeholder="Last Name*" />
+                            placeholder="Last Name *" />
                         <p class="text-danger"
                             *ngIf="lastNameValidation?.errors?.['required'] && lastNameValidation?.invalid && (lastNameValidation?.touched || lastNameValidation?.dirty)">
                             {{ 'Last name is required' }}</p>
@@ -46,7 +46,7 @@
                             {{ 'Date of birth is required' }}</p>
                     </div>
                     <div class="col-6"> <input type="number" maxlength="16" class="form-control" formControlName="pcn"
-                            placeholder="PCN Number*" (input)="enforceMaxLength($event)" />
+                            placeholder="PCN Number *" (input)="enforceMaxLength($event)" />
                         <p class="text-danger"
                             *ngIf="pcnValidation?.errors?.['required'] && pcnValidation?.invalid && (pcnValidation?.touched || pcnValidation?.dirty)">
                             {{ 'PCN is required' }}</p>
