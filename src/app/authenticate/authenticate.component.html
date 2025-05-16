@@ -32,7 +32,7 @@
                             {{ 'Middle name is required' }}</p>
                     </div>
                     <div class="col-6"> <input type="text" class="form-control" formControlName="lastName"
-                            placeholder="Last Name" />
+                            placeholder="Last Name*" />
                         <p class="text-danger"
                             *ngIf="lastNameValidation?.errors?.['required'] && lastNameValidation?.invalid && (lastNameValidation?.touched || lastNameValidation?.dirty)">
                             {{ 'Last name is required' }}</p>
@@ -46,7 +46,7 @@
                             {{ 'Date of birth is required' }}</p>
                     </div>
                     <div class="col-6"> <input type="number" maxlength="16" class="form-control" formControlName="pcn"
-                            placeholder="PCN Number" (input)="enforceMaxLength($event)" />
+                            placeholder="PCN Number*" (input)="enforceMaxLength($event)" />
                         <p class="text-danger"
                             *ngIf="pcnValidation?.errors?.['required'] && pcnValidation?.invalid && (pcnValidation?.touched || pcnValidation?.dirty)">
                             {{ 'PCN is required' }}</p>
@@ -64,13 +64,13 @@
         <div *ngIf="page === 2" class="text-center p-3">
             <h4>Take Live Selfie</h4>
             <p class="text-muted">Make sure you are the person verifying.</p>
-            <div class="my-4">
-                <img src="capture.jpg" alt="Selfie Icon" style="width: 250px; height: 200px;">
+            <div class="my-3">
+                <img src="capture.jpg" alt="Selfie Icon" style="width: 300px; height: 210px;">
             </div>
             <p class="text-muted small">
                 By proceeding, you allow the collection, use, and disclosure of your personal data.
             </p>
-            <button class="btn btn-primary w-50 mx-2" (click)="capture()" [disabled]="loading">
+            <button class="btn btn-primary w-25 mx-2" (click)="capture()" [disabled]="loading">
                 <span *ngIf="!loading">Capture</span>
                 <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 <span *ngIf="loading"> Capturing...</span>

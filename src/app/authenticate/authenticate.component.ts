@@ -51,13 +51,20 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     const now = new Date();
     this.today = now.toISOString().split('T')[0]; // format: YYYY-MM-DD
     this.idForm = this.fb.group({
-      suffix: ['', Validators.required],
-      firstName: ['', Validators.required],
-      middleName: ['', Validators.required],
+      suffix: [''],
+      firstName: [''],
+      middleName: [''],
       lastName: ['', Validators.required],
       dob: ['', Validators.required],
       pcn: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]]
     });
+  }
+
+  ngOnInit(): void {
+  }
+
+  async ngAfterViewInit() {
+    this.model = await posenet.load();
   }
 
   // PCN number validation
@@ -75,16 +82,10 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     this.idForm.get('pcn')?.setValue(input.value);
   }
 
-  ngOnInit(): void {
-  }
-
-  async ngAfterViewInit() {
-    this.model = await posenet.load();
-  }
-
   goBack() {
     this.page--;
     this.loading = false;
+    this.stopCamera();
   }
 
   nextPage() {
@@ -96,6 +97,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.page++;
       this.startCamera()
+      this.isBlinking = false;
     }, 2000)
   }
 
@@ -110,15 +112,36 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
 
   async startCamera(): Promise<void> {
     try {
+      // Try to get access to the user's camera
       this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+      // Assign stream to video element and start playback
       const video = this.videoRef.nativeElement as HTMLVideoElement;
       video.srcObject = this.stream;
       await video.play();
+
+      // Start pose detection
       await this.detectPose();
-    } catch (err) {
-      console.error('Error accessing webcam:', err);
+    } catch (err: any) {
+      let errorMessage = 'An unexpected error occurred while accessing the camera.';
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        errorMessage = 'Camera access was denied. Please allow access to continue.';
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        errorMessage = 'No camera device found. Please connect a webcam.';
+      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+        errorMessage = 'Camera is already in use by another application.';
+      }
+      Swal.fire({
+        icon: 'error',
+        text: `${errorMessage}`
+      }).then(() => {
+        this.page = 1;
+        this.loading = false;
+        this.isBlinking = false;
+      })
     }
   }
+
 
   async detectPose() {
     // Add these checks at the start
@@ -232,9 +255,9 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     this.steps.forEach(step => step.completed = false);
     this.calibrated = false;
     this.isBlinking = false;
+    this.loading = false;
     this.capturedImage = "";
     this.direction = '';
-    this.loading = false;
   }
 
   onVerificationSuccess() {
@@ -267,7 +290,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
             model.show();
           } else if (resp.message === "Not Verified") {
             Swal.fire({
-              icon: 'warning',
+              icon: 'error',
               text: 'Not Verified'
             }).then(() => {
               this.idForm.reset();
@@ -277,6 +300,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
               this.direction = '';
               this.page = 1;
               this.loading = false;
+              this.isBlinking = false
             });
           }
         },
