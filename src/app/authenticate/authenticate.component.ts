@@ -6,6 +6,7 @@ import { VerifyService } from '../service/verify.service'
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
+import { log } from '@tensorflow/tfjs-core/dist/log';
 
 declare var bootstrap: any;
 
@@ -123,6 +124,8 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
       // Start pose detection
       await this.detectPose();
     } catch (err: any) {
+      //console.log(err.name);
+
       let errorMessage = 'An unexpected error occurred while accessing the camera.';
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
         errorMessage = 'Camera access was denied. Please allow access to continue.';
@@ -138,6 +141,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
         this.page = 1;
         this.loading = false;
         this.isBlinking = false;
+        this.idForm.reset()
       })
     }
   }
