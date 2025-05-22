@@ -17,9 +17,13 @@
 
 .video-container {
     position: relative;
-    width: 320px;
-    height: 320px;
+    //  width: 320px;
+    // height: 320px;
     //   margin: 0 auto;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    aspect-ratio: 1 / 1;
     border-radius: 50%;
     overflow: hidden;
     border: 15px solid #007bff;
@@ -27,6 +31,8 @@
     justify-content: center;
     align-items: center;
 }
+
+
 
 .video-container.captured {
     position: relative;
@@ -64,13 +70,9 @@ canvas,
     z-index: 2;
 }
 
-// .captured-image {
-//     z-index: 3;
-// }
-
 .instruction-box {
     background: #e0f2fe;
-    padding: 1rem;
+    padding: 0.5rem;
     border-radius: 1rem;
     text-align: center;
 }
@@ -147,5 +149,3 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
-
-

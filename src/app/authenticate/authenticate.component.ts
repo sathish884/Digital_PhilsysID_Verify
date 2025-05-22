@@ -322,6 +322,11 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
               this.loading = false;
               this.isBlinking = false
             });
+          } else if (resp.data === null) {
+            Swal.fire({
+              icon: 'error',
+              text: 'Service temporarily unavailable. Please try again in a few moments'
+            })
           }
         },
         (error) => {

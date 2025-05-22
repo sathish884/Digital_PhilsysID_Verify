@@ -1,23 +1,20 @@
 <div class="container d-flex justify-content-center align-items-center flex-column vh-100">
-    <!-- <h4 class="text-center mb-3">FACE AUTHENTICATION</h4> -->
-    <div class="card shadow" style="width: 50%;">
+    <div class="card shadow w-100" style="max-width: 600px;">
         <!-- FORM VIEW -->
         <div *ngIf="page === 1">
             <div class="text-center mb-4 p-3" style="background-color: #1f4380;">
                 <img class="mb-4" src="logo.png" alt="" style="width: 80%;">
-                <!-- <h4 class="text-center mb-3 text-white">FACE AUTHENTICATION</h4> -->
             </div>
             <h4 class="text-center mb-3">FACE AUTHENTICATION</h4>
-
             <form [formGroup]="idForm" class="p-3">
                 <div class="row mb-4">
-                    <div class="col-6">
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
                         <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix *" />
                         <p class="text-danger"
                             *ngIf="suffixValidation?.errors?.['required'] && suffixValidation?.invalid && (suffixValidation?.touched || suffixValidation?.dirty)">
                             {{ 'Siffix is required' }}</p>
                     </div>
-                    <div class="col-6">
+                    <div class="col-12 col-md-6">
                         <input type="text" class="form-control" formControlName="firstName"
                             placeholder="First Name *" />
                         <p class="text-danger"
@@ -26,13 +23,13 @@
                     </div>
                 </div>
                 <div class="row mb-4">
-                    <div class="col-6"> <input type="text" class="form-control" formControlName="middleName"
-                            placeholder="Middle Name *" />
+                    <div class="col-12 col-md-6 mb-4 mb-md-0"> <input type="text" class="form-control"
+                            formControlName="middleName" placeholder="Middle Name *" />
                         <p class="text-danger"
                             *ngIf="middletNameValidation?.errors?.['required'] && middletNameValidation?.invalid && (middletNameValidation?.touched || middletNameValidation?.dirty)">
                             {{ 'Middle name is required' }}</p>
                     </div>
-                    <div class="col-6"> <input type="text" class="form-control" formControlName="lastName"
+                    <div class="col-12 col-md-6"> <input type="text" class="form-control" formControlName="lastName"
                             placeholder="Last Name *" />
                         <p class="text-danger"
                             *ngIf="lastNameValidation?.errors?.['required'] && lastNameValidation?.invalid && (lastNameValidation?.touched || lastNameValidation?.dirty)">
@@ -40,18 +37,15 @@
                     </div>
                 </div>
                 <div class="row mb-5">
-                    <div class="col-6">
-                         <input type="date" class="form-control" formControlName="dob" [max]="today"
-                            placeholder="Date of Birth (YYYY-MM-DD)" /> 
-                       
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
+                        <input type="date" class="form-control" formControlName="dob" [max]="today"
+                            placeholder="Date of Birth (YYYY-MM-DD)" />
                         <p class="text-danger"
                             *ngIf="dobValidation?.errors?.['required'] && dobValidation?.invalid && (dobValidation?.touched || dobValidation?.dirty)">
                             {{ 'Date of birth is required' }}</p>
                     </div>
-
-
-                    <div class="col-6"> <input type="number" maxlength="16" class="form-control" formControlName="pcn"
-                            placeholder="PCN Number *" (input)="enforceMaxLength($event)" />
+                    <div class="col-12 col-md-6"> <input type="number" maxlength="16" class="form-control"
+                            formControlName="pcn" placeholder="PCN Number *" (input)="enforceMaxLength($event)" />
                         <p class="text-danger"
                             *ngIf="pcnValidation?.errors?.['required'] && pcnValidation?.invalid && (pcnValidation?.touched || pcnValidation?.dirty)">
                             {{ 'PCN is required' }}</p>
@@ -60,7 +54,7 @@
                         </p>
                     </div>
                 </div>
-                <button class="btn btn-primary w-100" type="submit" (click)="nextPage()"
+                <button class="btn btn-primary w-100 w-md-25 mb-2 mb-md-0" type="submit" (click)="nextPage()"
                     [disabled]="idForm.invalid">Continue</button>
             </form>
         </div>
@@ -75,16 +69,15 @@
             <p class="text-muted small">
                 By proceeding, you allow the collection, use, and disclosure of your personal data.
             </p>
-            <button class="btn btn-primary w-25 mx-2" (click)="capture()" [disabled]="loading">
+            <button class="btn btn-primary w-md-25 mx-2" (click)="capture()" [disabled]="loading">
                 <span *ngIf="!loading">Capture</span>
                 <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 <span *ngIf="loading"> Capturing...</span>
             </button>
-            <button class="btn btn-secondary w-25" type="submit" (click)="goBack()">Back</button>
-
+            <button class="btn btn-secondary w-md-25" type="submit" (click)="goBack()">Back</button>
         </div>
 
-        <div *ngIf="page === 3" class="text-center p-3">
+        <div *ngIf="page === 3" class="text-center">
             <div class="container py-3">
                 <div class="liveness-container">
                     <h3>Face Liveness Check</h3>
@@ -106,11 +99,11 @@
                             {{ step.label }} <span>{{ step.completed ? '✓' : '⏳' }}</span>
                         </div>
                     </div>
-                    <div *ngIf="capturedImage" class="button-group mt-3">
+                    <div *ngIf="capturedImage" class="button-group">
                         <button class="btn btn-warning" (click)="retakeImage()">Retake</button>
                         <button class="btn btn-success" (click)="onVerificationSuccess()">Submit</button>
                     </div>
-                    <div *ngIf="!capturedImage" class="button-group mt-3">
+                    <div *ngIf="!capturedImage" class="button-group">
                         <button class="btn btn-secondary" *ngIf="!capturedImage" (click)="retry()">Retry</button>
                         <button class="btn btn-secondary" type="submit" (click)="goBack()">Back</button>
                     </div>
@@ -138,62 +131,64 @@
                             alt="User Photo" style="width: 90%; height: 40%;">
                     </div>
                     <div class="col-md-8">
-                        <table class="table table-borderless table-md">
-                            <tbody>
-                                <tr>
-                                    <th>PhilSys Card Number (PCN)</th>
-                                    <td>{{ idForm.get('pcn')?.value || '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <th>First Name</th>
-                                    <td>{{userData.firstName_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Middle Name</th>
-                                    <td>{{userData.middleName_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Last Name</th>
-                                    <td>{{userData.lastName_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Suffix</th>
-                                    <td>{{userData.suffix_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Sex</th>
-                                    <td>{{userData.gender_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Birth Date</th>
-                                    <td>{{userData.dob || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Place of Birth</th>
-                                    <td>{{userData.permanentAddressLine1_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Address</th>
-                                    <td>{{userData.presentAddress_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Marital Status</th>
-                                    <td>{{userData.maritalStatus_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Email Address</th>
-                                    <td>{{userData.emailId || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Blood Type</th>
-                                    <td>{{userData.bloodType_eng || "-"}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Residence Status</th>
-                                    <td>{{userData.residenceStatus_eng || '-'}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-borderless table-md">
+                                <tbody>
+                                    <tr>
+                                        <th>PhilSys Card Number (PCN)</th>
+                                        <td>{{ idForm.get('pcn')?.value || '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <td>{{userData.firstName_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Middle Name</th>
+                                        <td>{{userData.middleName_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Last Name</th>
+                                        <td>{{userData.lastName_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Suffix</th>
+                                        <td>{{userData.suffix_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Sex</th>
+                                        <td>{{userData.gender_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Birth Date</th>
+                                        <td>{{userData.dob || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Place of Birth</th>
+                                        <td>{{userData.permanentAddressLine1_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Address</th>
+                                        <td>{{userData.presentAddress_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Marital Status</th>
+                                        <td>{{userData.maritalStatus_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email Address</th>
+                                        <td>{{userData.emailId || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Blood Type</th>
+                                        <td>{{userData.bloodType_eng || "-"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Residence Status</th>
+                                        <td>{{userData.residenceStatus_eng || '-'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="text-center mt-3">
