@@ -17,7 +17,7 @@ export class VerifyService {
       'content-type': 'application/json', Authorization: 'Bearer '
     });
     // let authURL ="https://api.apps-external.uat2.phylsys.gov.ph/PSA_VERIFY_SERVICE/verifyData"  // this.apiService.apiBaseUrl + 'verifyData';
-    let authURL = "https://pdms-lb-1935476243.ap-southeast-1.elb.amazonaws.com/PSA_VERIFY_SERVICE/verifyData"
+    let authURL = "https://tsp-tspas-lb-819739355.ap-southeast-1.elb.amazonaws.com/PSA_VERIFY_SERVICE/verifyData"
     return this.http.post<any>(authURL, body, { headers: headersRequest });
   }
 
