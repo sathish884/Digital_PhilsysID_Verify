@@ -18,7 +18,8 @@
                             {{ 'Siffix is required' }}</p>
                     </div>
                     <div class="col-6">
-                        <input type="text" class="form-control" formControlName="firstName" placeholder="First Name *" />
+                        <input type="text" class="form-control" formControlName="firstName"
+                            placeholder="First Name *" />
                         <p class="text-danger"
                             *ngIf="firstNameValidation?.errors?.['required'] && firstNameValidation?.invalid && (firstNameValidation?.touched || firstNameValidation?.dirty)">
                             {{ 'First name is required' }}</p>
@@ -39,12 +40,16 @@
                     </div>
                 </div>
                 <div class="row mb-5">
-                    <div class="col-6"> <input type="date" class="form-control" formControlName="dob" [max]="today"
-                            placeholder="Date of Birth (YYYY-MM-DD)" />
+                    <div class="col-6">
+                         <input type="date" class="form-control" formControlName="dob" [max]="today"
+                            placeholder="Date of Birth (YYYY-MM-DD)" /> 
+                       
                         <p class="text-danger"
                             *ngIf="dobValidation?.errors?.['required'] && dobValidation?.invalid && (dobValidation?.touched || dobValidation?.dirty)">
                             {{ 'Date of birth is required' }}</p>
                     </div>
+
+
                     <div class="col-6"> <input type="number" maxlength="16" class="form-control" formControlName="pcn"
                             placeholder="PCN Number *" (input)="enforceMaxLength($event)" />
                         <p class="text-danger"

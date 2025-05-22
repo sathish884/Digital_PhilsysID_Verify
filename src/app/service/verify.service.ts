@@ -16,7 +16,7 @@ export class VerifyService {
     const headersRequest = new HttpHeaders({
       'content-type': 'application/json', Authorization: 'Bearer '
     });
-    let authURL ="http://192.168.1.140:8000/PSA_VERIFY_SERVICE/verifyData"  // this.apiService.apiBaseUrl + 'verifyData';
+    let authURL ="https://api.apps-external.uat2.phylsys.gov.ph/PSA_VERIFY_SERVICE/verifyData"  // this.apiService.apiBaseUrl + 'verifyData';
     return this.http.post<any>(authURL, body, { headers: headersRequest });
   }
 

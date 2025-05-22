@@ -6,8 +6,6 @@ import { VerifyService } from '../service/verify.service'
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
-import { log } from '@tensorflow/tfjs-core/dist/log';
-
 declare var bootstrap: any;
 
 
@@ -23,7 +21,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas') canvasRef!: ElementRef;
 
   capturedImage: string = "";
-  private stream: MediaStream | null = null;
+  public stream: MediaStream | null = null;
 
   idForm: FormGroup;
   submitted = false;
@@ -38,8 +36,9 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
   userData: any = {}
   today: string;
   userPhoto: string = "";
-
+  errorMessage: string = "";
   private destroy$ = new Subject<void>;
+
 
   steps = [
     { label: 'Look Left', direction: 'Left', completed: false },
@@ -49,19 +48,26 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(private fb: FormBuilder, private verifyService: VerifyService, private datePipe: DatePipe) {
+
     const now = new Date();
     this.today = now.toISOString().split('T')[0]; // format: YYYY-MM-DD
     this.idForm = this.fb.group({
-      suffix: ['',Validators.required],
-      firstName: ['',Validators.required],
-      middleName: ['',Validators.required],
+      suffix: ['', Validators.required],
+      firstName: ['', Validators.required],
+      middleName: ['', Validators.required],
       lastName: ['', Validators.required],
       dob: ['', Validators.required],
       pcn: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]]
     });
+
+
   }
 
   ngOnInit(): void {
+  }
+
+  onDateChange(newDate: Date) {
+    console.log(newDate);
   }
 
   async ngAfterViewInit() {
@@ -102,6 +108,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     }, 2000)
   }
 
+
   get currentInstruction() {
     const step = this.steps.find(s => !s.completed);
     return step ? step.label : 'All steps completed';
@@ -124,27 +131,36 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
       // Start pose detection
       await this.detectPose();
     } catch (err: any) {
-      //console.log(err.name);
-
-      let errorMessage = 'An unexpected error occurred while accessing the camera.';
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        errorMessage = 'Camera access was denied. Please allow access to continue.';
+        this.errorMessage = 'Camera access was denied. Please allow access to continue.';
       } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-        errorMessage = 'No camera device found. Please connect a webcam.';
+        this.errorMessage = 'No camera device found. Please connect a webcam.';
       } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-        errorMessage = 'Camera is already in use by another application.';
+        this.errorMessage = 'Camera is already in use by another application.';
+      } else {
+        this.errorMessage = 'An unexpected error occurred while accessing the camera.';
       }
       Swal.fire({
         icon: 'error',
-        text: `${errorMessage}`
-      }).then(() => {
-        this.page = 1;
-        this.loading = false;
-        this.isBlinking = false;
-        this.idForm.reset()
+        text: `${this.errorMessage}`
       })
+      // .then(() => {
+      //   this.page = 1;
+      //   this.loading = false;
+      //   this.isBlinking = false;
+      //   this.idForm.reset()
+      // })
+
+      if (this.page === 3) {
+        this.page = 1; // redirect or fallback to a safe page
+      }
+      this.loading = false;
+      this.isBlinking = false;
+      this.idForm.reset();
     }
   }
+
+
 
 
   async detectPose() {

@@ -8,17 +8,18 @@ import { DatePipe } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthenticateComponent } from './authenticate/authenticate.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
     declarations: [AuthenticateComponent, AppComponent],
     imports: [
         BrowserModule,
-        BrowserAnimationsModule,
         AppRoutingModule,
         FormsModule, ReactiveFormsModule,
         RouterModule,
-        HttpClientModule
+        HttpClientModule,
+        BsDatepickerModule.forRoot(),
+        BrowserAnimationsModule
     ],
 
     providers: [DatePipe],
