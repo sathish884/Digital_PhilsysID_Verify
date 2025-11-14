@@ -9,10 +9,10 @@
             <form [formGroup]="idForm" class="p-3">
                 <div class="row mb-4">
                     <div class="col-12 col-md-6 mb-4 mb-md-0">
-                        <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix *" />
-                        <p class="text-danger"
+                        <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix" />
+                        <!-- <p class="text-danger"
                             *ngIf="suffixValidation?.errors?.['required'] && suffixValidation?.invalid && (suffixValidation?.touched || suffixValidation?.dirty)">
-                            {{ 'Siffix is required' }}</p>
+                            {{ 'Siffix is required' }}</p> -->
                     </div>
                     <div class="col-12 col-md-6">
                         <input type="text" class="form-control" formControlName="firstName"
@@ -88,7 +88,7 @@
                           }">
                         <video #video width="320" height="320" autoplay playsinline></video>
                         <canvas #canvas width="320" height="320" class="overlay-canvas d-none"></canvas>
-                        <img *ngIf="capturedImage" [src]="capturedImage" alt="Captured" class="captured-image" />
+                        <img *ngIf="capturedImage" [src]="capturedImage" alt="Captured Face" class="captured-image" />
                     </div>
                     <div class="instruction-box">
                         <h4>{{ currentInstruction }}</h4>
@@ -104,7 +104,7 @@
                         <button class="btn btn-success" (click)="onVerificationSuccess()">Submit</button>
                     </div>
                     <div *ngIf="!capturedImage" class="button-group">
-                        <button class="btn btn-secondary" *ngIf="!capturedImage" (click)="retry()">Retry</button>
+                        <button class="btn btn-secondary" (click)="retry()">Retry</button>
                         <button class="btn btn-secondary" type="submit" (click)="goBack()">Back</button>
                     </div>
                 </div>

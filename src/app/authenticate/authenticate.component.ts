@@ -7,7 +7,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 declare var bootstrap: any;
-
+import { ChangeDetectorRef } from '@angular/core';
+import { log } from '@tensorflow/tfjs-core/dist/log';
 
 @Component({
   selector: 'app-authenticate',
@@ -47,12 +48,17 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     { label: 'Look Down', direction: 'Down', completed: false },
   ];
 
-  constructor(private fb: FormBuilder, private verifyService: VerifyService, private datePipe: DatePipe) {
+  constructor(
+    private fb: FormBuilder,
+    private verifyService: VerifyService,
+    private datePipe: DatePipe,
+    private cdr: ChangeDetectorRef
+  ) {
 
     const now = new Date();
     this.today = now.toISOString().split('T')[0]; // format: YYYY-MM-DD
     this.idForm = this.fb.group({
-      suffix: ['', Validators.required],
+      suffix: [''],
       firstName: ['', Validators.required],
       middleName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -120,6 +126,11 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
 
   async startCamera(): Promise<void> {
     try {
+
+      // navigator.mediaDevices.enumerateDevices()
+      //   .then(devices => devices.filter(d => d.kind === 'videoinput'))
+      //   .then(cameras => console.log(cameras));
+
       // Try to get access to the user's camera
       this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
 
@@ -226,11 +237,12 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
         const canvas = this.canvasRef.nativeElement as HTMLCanvasElement;
         if (!canvas) throw new Error('Canvas not available');
         this.capturedImage = canvas.toDataURL('image/png');
+        this.cdr.detectChanges(); // <-- Force view update
         this.loading = false;
         this.stopCamera();
+        console.log("Captured image data:", this.capturedImage);
       });
     }, 1800);
-
   }
 
   async retakeImage() {
@@ -239,16 +251,20 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     this.capturedImage = "";
     this.direction = '';
     this.isBlinking = false;
+    this.loading = false;
+    this.cdr.detectChanges(); // Ensure UI reflects reset
     await this.startCamera();
-    this.detectPose();
   }
 
-  retry() {
+  async retry() {
     this.steps.forEach(step => step.completed = false);
     this.calibrated = false;
     this.capturedImage = "";
     this.direction = '';
-    this.detectPose()
+    this.isBlinking = false;
+    this.loading = false;
+    this.cdr.detectChanges(); // Ensure UI reflects reset
+    await this.startCamera();
   }
 
   stopCamera(): void {
@@ -335,6 +351,15 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
             icon: 'error',
             title: 'Verification Failed',
             text: 'Something went wrong during verification.'
+          }).then(() => {
+            this.idForm.reset();
+            this.steps.forEach(step => step.completed = false);
+            this.calibrated = false;
+            this.capturedImage = "";
+            this.direction = '';
+            this.page = 1;
+            this.loading = false;
+            this.isBlinking = false
           });
         }
       );
