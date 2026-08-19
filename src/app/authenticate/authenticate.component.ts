@@ -54,7 +54,6 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private cdr: ChangeDetectorRef
   ) {
-
     const now = new Date();
     this.today = now.toISOString().split('T')[0]; // format: YYYY-MM-DD
     this.idForm = this.fb.group({
@@ -65,7 +64,6 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
       dob: ['', Validators.required],
       pcn: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]]
     });
-
 
   }
 
@@ -127,10 +125,6 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
   async startCamera(): Promise<void> {
     try {
 
-      // navigator.mediaDevices.enumerateDevices()
-      //   .then(devices => devices.filter(d => d.kind === 'videoinput'))
-      //   .then(cameras => console.log(cameras));
-
       // Try to get access to the user's camera
       this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
 
@@ -155,12 +149,6 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
         icon: 'error',
         text: `${this.errorMessage}`
       })
-      // .then(() => {
-      //   this.page = 1;
-      //   this.loading = false;
-      //   this.isBlinking = false;
-      //   this.idForm.reset()
-      // })
 
       if (this.page === 3) {
         this.page = 1; // redirect or fallback to a safe page
@@ -170,9 +158,6 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
       this.idForm.reset();
     }
   }
-
-
-
 
   async detectPose() {
     // Add these checks at the start
