@@ -2,21 +2,24 @@
     <div class="card shadow w-100" style="max-width: 600px;">
         <!-- FORM VIEW -->
         <div *ngIf="page === 1">
-            <div class="text-center mb-4 p-3" style="background-color: #1f4380;">
-                <img class="mb-4" src="logo.png" alt="" style="width: 80%;">
+            <div class="d-flex justify-content-center align-items-center gap-3 mb-4 pt-3"
+                style="border-bottom: 1px solid #bfc7d5;">
+                <!-- background-color: #1f4380; -->
+                <img class="mb-4" src="election_logo.png" alt="" style="width: 25%; height: auto;">
+                <img class="mb-4" src="election_content.png" alt="" style="width: 50%; height: auto;">
             </div>
-            <h4 class="text-center mb-3">FACE AUTHENTICATION</h4>
+            <h4 class="text-center mb-3" style="color: #1f4380;">VOTER VERIFICATION SYSTEM</h4>
             <form [formGroup]="idForm" class="p-3">
                 <div class="row mb-4">
                     <div class="col-12 col-md-6 mb-4 mb-md-0">
-                        <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix" />
+                        <input type="text" class="form-control" formControlName="suffix" placeholder="SUFFIX" />
                         <!-- <p class="text-danger"
                             *ngIf="suffixValidation?.errors?.['required'] && suffixValidation?.invalid && (suffixValidation?.touched || suffixValidation?.dirty)">
                             {{ 'Siffix is required' }}</p> -->
                     </div>
                     <div class="col-12 col-md-6">
                         <input type="text" class="form-control" formControlName="firstName"
-                            placeholder="First Name *" />
+                            placeholder="FIRST NAME *" />
                         <p class="text-danger"
                             *ngIf="firstNameValidation?.errors?.['required'] && firstNameValidation?.invalid && (firstNameValidation?.touched || firstNameValidation?.dirty)">
                             {{ 'First name is required' }}</p>
@@ -24,13 +27,13 @@
                 </div>
                 <div class="row mb-4">
                     <div class="col-12 col-md-6 mb-4 mb-md-0"> <input type="text" class="form-control"
-                            formControlName="middleName" placeholder="Middle Name *" />
+                            formControlName="middleName" placeholder="MIDDLE NAME *" />
                         <p class="text-danger"
                             *ngIf="middletNameValidation?.errors?.['required'] && middletNameValidation?.invalid && (middletNameValidation?.touched || middletNameValidation?.dirty)">
                             {{ 'Middle name is required' }}</p>
                     </div>
                     <div class="col-12 col-md-6"> <input type="text" class="form-control" formControlName="lastName"
-                            placeholder="Last Name *" />
+                            placeholder="LAST NAME *" />
                         <p class="text-danger"
                             *ngIf="lastNameValidation?.errors?.['required'] && lastNameValidation?.invalid && (lastNameValidation?.touched || lastNameValidation?.dirty)">
                             {{ 'Last name is required' }}</p>
@@ -39,23 +42,24 @@
                 <div class="row mb-5">
                     <div class="col-12 col-md-6 mb-4 mb-md-0">
                         <input type="date" class="form-control" formControlName="dob" [max]="today"
-                            placeholder="Date of Birth (YYYY-MM-DD)" />
+                            placeholder="DATE OF BIRTH (YYYY-MM-DD)" />
                         <p class="text-danger"
                             *ngIf="dobValidation?.errors?.['required'] && dobValidation?.invalid && (dobValidation?.touched || dobValidation?.dirty)">
                             {{ 'Date of birth is required' }}</p>
                     </div>
                     <div class="col-12 col-md-6"> <input type="number" maxlength="16" class="form-control"
-                            formControlName="pcn" placeholder="PCN Number *" (input)="enforceMaxLength($event)" />
+                            formControlName="pcn" placeholder="IDENTIFICATION NUMBER *"
+                            (input)="enforceMaxLength($event)" />
                         <p class="text-danger"
                             *ngIf="pcnValidation?.errors?.['required'] && pcnValidation?.invalid && (pcnValidation?.touched || pcnValidation?.dirty)">
-                            {{ 'PCN is required' }}</p>
-                        <p class="text-danger" *ngIf="pcnValidation?.errors?.['pattern'] && pcnValidation?.touched">
-                            PCN must be exactly 16 digits
-                        </p>
+                            {{ 'Identification number is required' }}</p>
+                        <!-- <p class="text-danger" *ngIf="pcnValidation?.errors?.['pattern'] && pcnValidation?.touched">
+                            Identification number must be exactly 16 digits
+                        </p> -->
                     </div>
                 </div>
-                <button class="btn btn-primary w-100 w-md-25 mb-2 mb-md-0" type="submit" (click)="nextPage()"
-                    [disabled]="idForm.invalid">Continue</button>
+                <button class="btn w-100 w-md-25 mb-2 mb-md-0" style="background-color: #005baa; color: #fff;"
+                    type="submit" (click)="nextPage()" [disabled]="idForm.invalid">Continue</button>
             </form>
         </div>
 
@@ -69,7 +73,8 @@
             <p class="text-muted small">
                 By proceeding, you allow the collection, use, and disclosure of your personal data.
             </p>
-            <button class="btn btn-primary w-md-25 mx-2" (click)="capture()" [disabled]="loading">
+            <button class="btn w-md-25 mx-2" style="background-color: #005baa; color: #fff;" (click)="capture()"
+                [disabled]="loading">
                 <span *ngIf="!loading">Capture</span>
                 <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 <span *ngIf="loading"> Capturing...</span>
@@ -105,7 +110,8 @@
                     </div>
                     <div *ngIf="!capturedImage" class="button-group">
                         <button class="btn btn-secondary" (click)="retry()">Retry</button>
-                        <button class="btn btn-secondary" type="submit" (click)="goBack()">Back</button>
+                        <button class="btn btn-secondary" type="submit" (click)="goBack()" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop">Back</button>
                     </div>
                 </div>
             </div>
@@ -120,7 +126,7 @@
         <div class="modal-content">
             <div class="modal-body p-4">
                 <div class="row">
-                    <h5 class="text-center mb-4">ID-Authentication</h5>
+                    <h5 class="text-center mb-4">Voter Information</h5>
                     <div class="col-md-4 text-center">
                         <h6 style="font-weight: 650;
     margin-bottom: 20px;
@@ -135,7 +141,7 @@
                             <table class="table table-borderless table-md">
                                 <tbody>
                                     <tr>
-                                        <th>PhilSys Card Number (PCN)</th>
+                                        <th>Identification Number</th>
                                         <td>{{ idForm.get('pcn')?.value || '-' }}</td>
                                     </tr>
                                     <tr>
@@ -192,7 +198,8 @@
                     </div>
                 </div>
                 <div class="text-center mt-3">
-                    <button class="btn btn-primary w-25" data-bs-dismiss="modal" (click)="closeModal()">OK</button>
+                    <button class="btn w-25" style="background-color: #005baa; color: #fff;" data-bs-dismiss="modal"
+                        (click)="closeModal()">OK</button>
                 </div>
             </div>
         </div>

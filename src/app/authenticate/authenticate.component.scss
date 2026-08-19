@@ -26,7 +26,7 @@
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     overflow: hidden;
-    border: 15px solid #007bff;
+    border: 15px solid #005baa;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -148,4 +148,9 @@ input[type="number"]::-webkit-outer-spin-button {
 /* For Firefox */
 input[type="number"] {
     -moz-appearance: textfield;
+}
+
+
+.form-control::placeholder {
+  font-size: 13px;
 }

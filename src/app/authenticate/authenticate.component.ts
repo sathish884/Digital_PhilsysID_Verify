@@ -62,7 +62,8 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
       middleName: ['', Validators.required],
       lastName: ['', Validators.required],
       dob: ['', Validators.required],
-      pcn: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]]
+      pcn: ['', [Validators.required]]
+      // Validators.pattern(/^\d{16}$/)
     });
 
   }
@@ -321,7 +322,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
               this.direction = '';
               this.page = 1;
               this.loading = false;
-              this.isBlinking = false
+              this.isBlinking = false;
             });
           } else if (resp.data === null) {
             Swal.fire({
@@ -344,7 +345,7 @@ export class AuthenticateComponent implements OnInit, AfterViewInit {
             this.direction = '';
             this.page = 1;
             this.loading = false;
-            this.isBlinking = false
+            this.isBlinking = false;
           });
         }
       );
